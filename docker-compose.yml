@@ -13,13 +13,14 @@ services:
       - promocode-factory-administration-db
   #Administration Db
   promocode-factory-administration-db:
-    image: "postgres:9.6.17"
+    image: "mongo:4.2.3"
     container_name: 'promocode-factory-administration-db'
     restart: always 
     ports:
       - 5433:5432
     environment: 
-      - POSTGRES_PASSWORD=docker
+      - MONGO_INITDB_ROOT_USERNAME=mongo
+      - MONGO_INITDB_ROOT_PASSWORD=password
 
   #ReceivingFromPartner Api
   promocode-factory-receiving-from-partner-api:

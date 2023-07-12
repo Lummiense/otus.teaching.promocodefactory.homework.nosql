@@ -16,6 +16,7 @@ using Otus.Teaching.Pcf.Administration.DataAccess.Data;
 using Otus.Teaching.Pcf.Administration.DataAccess.Repositories;
 using Otus.Teaching.Pcf.Administration.Core.Domain.Administration;
 using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
+using MongoDB.Driver;
 
 namespace Otus.Teaching.Pcf.Administration.WebHost
 {
@@ -32,9 +33,25 @@ namespace Otus.Teaching.Pcf.Administration.WebHost
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IMongoClient>(_ =>
+                    new MongoClient(Configuration["MongoDb:ConnectionString"]))
+                    .AddSingleton(serviceProvider =>
+                    serviceProvider.GetRequiredService<IMongoClient>()
+                        .GetDatabase(Configuration["MongoDb:Administration"]))
+                    .AddSingleton(serviceProvider =>
+                    serviceProvider.GetRequiredService<IMongoDatabase>()
+                        .GetCollection<Employee>("Employee"))
+                    .AddSingleton(serviceProvider =>
+                    serviceProvider.GetRequiredService<IMongoDatabase>()
+                        .GetCollection<Role>("Role"))
+                .AddScoped(serviceProvider =>
+                    serviceProvider.GetRequiredService<IMongoClient>()
+                        .StartSession());
+            ;
             services.AddControllers().AddMvcOptions(x=> 
                 x.SuppressAsyncSuffixInActionNames = false);
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+            services.AddScoped(typeof(IRepository<>), typeof(MongoRepository<>));
             services.AddScoped<IDbInitializer, EfDbInitializer>();
             services.AddDbContext<DataContext>(x =>
             {
