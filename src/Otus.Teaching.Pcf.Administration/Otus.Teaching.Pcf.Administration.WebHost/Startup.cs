@@ -47,19 +47,21 @@ namespace Otus.Teaching.Pcf.Administration.WebHost
                 .AddScoped(serviceProvider =>
                     serviceProvider.GetRequiredService<IMongoClient>()
                         .StartSession());
-            ;
+            
             services.AddControllers().AddMvcOptions(x=> 
                 x.SuppressAsyncSuffixInActionNames = false);
-            services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+            //services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+            
             services.AddScoped(typeof(IRepository<>), typeof(MongoRepository<>));
-            services.AddScoped<IDbInitializer, EfDbInitializer>();
-            services.AddDbContext<DataContext>(x =>
+            services.AddScoped<IDbInitializer, MongoDbInitializer>();
+            //services.AddScoped<IDbInitializer, EfDbInitializer>();
+          /*  services.AddDbContext<DataContext>(x =>
             {
                 //x.UseSqlite("Filename=PromocodeFactoryAdministrationDb.sqlite");
                 x.UseNpgsql(Configuration.GetConnectionString("PromocodeFactoryAdministrationDb"));
                 x.UseSnakeCaseNamingConvention();
                 x.UseLazyLoadingProxies();
-            });
+            });*/
 
             services.AddOpenApiDocument(options =>
             {
