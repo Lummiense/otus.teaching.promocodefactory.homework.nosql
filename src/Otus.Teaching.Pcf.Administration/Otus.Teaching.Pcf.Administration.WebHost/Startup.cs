@@ -37,7 +37,7 @@ namespace Otus.Teaching.Pcf.Administration.WebHost
                     new MongoClient(Configuration["MongoDb:ConnectionString"]))
                     .AddSingleton(serviceProvider =>
                     serviceProvider.GetRequiredService<IMongoClient>()
-                        .GetDatabase(Configuration["MongoDb:Administration"]))
+                        .GetDatabase(Configuration["MongoDb:Database"]))
                     .AddSingleton(serviceProvider =>
                     serviceProvider.GetRequiredService<IMongoDatabase>()
                         .GetCollection<Employee>("Employee"))
