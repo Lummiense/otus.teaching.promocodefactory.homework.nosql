@@ -19,15 +19,15 @@ namespace Otus.Teaching.Pcf.Administration.DataAccess.Repositories
             _collection = collection;
         }
 
-        public Task AddAsync(T entity)
+        public async Task AddAsync(T entity)
         {
-           
-            throw new NotImplementedException();
+
+            await _collection.InsertOneAsync(entity);
         }
 
-        public Task DeleteAsync(T entity)
+        public async Task DeleteAsync(T entity)
         {
-            throw new NotImplementedException();
+            await _collection.DeleteOneAsync(x=>x.Id==entity.Id);
         }
 
         public async Task<IEnumerable<T>> GetAllAsync()
